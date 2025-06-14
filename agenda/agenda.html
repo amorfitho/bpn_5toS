@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Agendar Cita Veterinaria</title>
+  <link rel="stylesheet" href="agenda.css" />
+</head>
+<body>
+  <h1>Agendar Cita</h1>
+
+  <!-- 2. Formulario de cita -->
+  <form id="appointmentForm">
+    <div class="campo">
+      <label for="rutDueño">RUT Dueño</label>
+      <input type="text" id="rutDueño" name="rutDueño" required />
+    </div>
+    <div class="campo">
+      <label for="nombreDueño">Nombre Dueño</label>
+      <input type="text" id="nombreDueño" name="nombreDueño" required />
+    </div>
+    <div class="campo">
+      <label for="nombreMascota">Nombre Mascota</label>
+      <input type="text" id="nombreMascota" name="nombreMascota" required />
+    </div>
+    <div class="campo">
+      <label for="edadMascota">Edad Mascota</label>
+      <input type="number" id="edadMascota" name="edadMascota" required />
+    </div>
+    <div class="campo">
+      <label for="sexoMascota">Sexo Mascota</label>
+      <select id="sexoMascota" name="sexoMascota" required>
+        <option value="">--Selecciona--</option>
+        <option value="Macho">Macho</option>
+        <option value="Hembra">Hembra</option>
+      </select>
+    </div>
+    <div class="campo">
+      <label for="tipoAnimal">Tipo Animal</label>
+      <input type="text" id="tipoAnimal" name="tipoAnimal" required />
+    </div>
+    <div class="campo">
+      <label for="razaMascota">Raza Mascota</label>
+      <input type="text" id="razaMascota" name="razaMascota" required />
+    </div>
+    <div class="campo">
+      <label for="direccion">Dirección Domicilio</label>
+      <input type="text" id="direccion" name="direccion" required />
+    </div>
+    <div class="campo">
+      <label for="region">Región</label>
+      <select id="region" name="region" required>
+        <option value="">--Selecciona Región--</option>
+        <!-- Agrega tus opciones de regiones -->
+        <option>Región Metropolitana</option>
+        <option>Región de Valparaíso</option>
+        <option>Región del Maule</option>
+        <option>Región de Ñuble</option>
+        <option>Región del Biobío</option>
+        <option>Región del Libertador General Bernardo O’Higgins</option>
+      </select>
+    </div>
+    <div class="campo">
+      <label for="servicio">Servicio</label>
+      <select id="servicio" name="servicio" required>
+        <option value="">--Selecciona el Servicio--</option>
+        <!--opciones de servicios -->
+        <option>Ambulatorio</option>
+        <option>Presencial</option>
+      </select>
+    </div>
+    <div class="campo">
+      <label for="subservicio">Subservicio</label>
+      <select id="subservicio" name="subservicio" required>
+        <option value="">--Selecciona el Sub-Servicio--</option>
+        <!--opciones de sub-servicios -->
+        <option>peluquería</option>
+        <option>consulta veterinaria</option>
+        <option>radiografía</option>
+        <option>vacunatorio</option>
+        <option>cirugía</option>
+        <option>anti parasitario</option>
+        <option>emergencia</option>
+      </select>
+    </div>
+    <div class="inline-campos">
+      <div class="campo">
+        <label for="dia">Día</label>
+        <input type="number" id="dia" name="dia" min="1" max="31" required />
+      </div>
+      <div class="campo">
+        <label for="mes">Mes</label>
+        <input type="number" id="mes" name="mes" min="1" max="12" required />
+      </div>
+      <div class="campo">
+        <label for="año">Año</label>
+        <input type="number" id="año" name="año" min="2025" required />
+      </div>
+      <div class="campo">
+        <label for="hora">Hora</label>
+        <input type="time" id="hora" name="hora" required />
+      </div>
+    </div>
+    <button type="submit">Guardar Cita</button>
+  </form>
+
+  <!-- SheetJS -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <script src="agenda.js"></script>
+</body>
+</html>

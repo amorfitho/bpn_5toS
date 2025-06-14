@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vista Trabajador</title>
+  <link rel="stylesheet" href="../agenda/agenda.css" />
+</head>
+<body>
+  <h1>Vista Trabajador</h1>
+
+  <!-- 1. Carga del fichero BD.txt -->
+  <label for="fileInput">Cargar BD.txt:</label>
+  <input type="file" id="fileInput" accept=".txt" />
+
+  <!-- 2. Selector de citas -->
+  <div id="selectorCitas" style="display:none; margin-top:1em;">
+    <label for="citaSelect">Selecciona una cita:</label>
+    <select id="citaSelect">
+      <option value="">-- elige --</option>
+    </select>
+  </div>
+
+  <!-- 3. Contenedor para mostrar datos de la cita + formulario -->
+  <div id="detalleYFormulario" style="display:none; margin-top:2em;">
+    <h2>Datos de la Cita</h2>
+    <pre id="datosCita"></pre>
+
+    <h2>Formulario de Atención</h2>
+    <form id="trabajadorForm">
+      <div>
+        <label>Razón Atención Servicio<br/>
+          <input type="text" name="razonServicio" required />
+        </label>
+      </div>
+
+      <div>
+        <label>Hora atención<br/>
+          <input type="time" name="horaAtencion" required />
+        </label>
+      </div>
+
+      <div>
+        <label>RUT especialista<br/>
+          <input type="text" name="rutEspecialista" required />
+        </label>
+      </div>
+
+      <div>
+        <label>Nombre especialista<br/>
+          <input type="text" name="nombreEspecialista" required />
+        </label>
+      </div>
+
+      <div>
+        <span>¿Se emite receta?</span><br/>
+        <label><input type="radio" name="emiteReceta" value="sí" required /> Sí</label>
+        <label><input type="radio" name="emiteReceta" value="no" /> No</label>
+      </div>
+
+      <div>
+        <span>¿Se emite diagnóstico?</span><br/>
+        <label><input type="radio" name="emiteDiagnostico" value="sí" required /> Sí</label>
+        <label><input type="radio" name="emiteDiagnostico" value="no" /> No</label>
+      </div>
+
+      <div id="campoDiagnostico" style="display:none;">
+        <label>Diagnóstico<br/>
+          <textarea name="diagnostico" rows="2"></textarea>
+        </label>
+      </div>
+
+      <div>
+        <label>Costo Servicio (cliente)<br/>
+          <input type="number" name="costoServicioCliente" step="0.01" required />
+        </label>
+      </div>
+
+      <div>
+        <label>Costo Promedio Medicamento(s) (cliente)<br/>
+          <input type="number" name="costoPromedioMedicamento" step="0.01" required />
+        </label>
+      </div>
+
+      <div>
+        <label>Insumos<br/>
+          <input type="text" name="insumos" />
+        </label>
+      </div>
+
+      <div>
+        <label>Tipo de costo<br/>
+          <input type="text" name="tipoCosto" />
+        </label>
+      </div>
+
+      <div>
+        <label>Insumos (costo promedio veterinaria)<br/>
+          <input type="number" name="insumosCostoVeterinaria" step="0.01" />
+        </label>
+      </div>
+
+      <div>
+        <label>Ingresos veterinaria<br/>
+          <input type="number" name="ingresosVeterinaria" step="0.01" />
+        </label>
+      </div>
+
+      <button type="submit">Guardar Atención</button>
+    </form>
+  </div>
+
+  <script src="tarbajador.js"></script>
+</body>
+</html>

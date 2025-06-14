@@ -1,0 +1,2 @@
+rutDueño;nombreDueño;nombreMascota;edadMascota;sexoMascota;tipoAnimal;razaMascota;direccion;region;servicio;subservicio;dia;mes;año;hora;timestamp
+21499151-9;fabian;snoopy;12;Macho;perro;Poodle;tumtumtum saur;Región de Valparaíso;Presencial;radiografía;24;5;2025;05:12;2025-06-14T03:10:58.562Z
