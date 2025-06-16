@@ -1,15 +1,37 @@
+// tarbajador.js
 document.addEventListener('DOMContentLoaded', () => {
   // Referencias al DOM
-  const txtInput       = document.getElementById('fileInput');      // BD.txt
-  const excelInput     = document.getElementById('excelInput');    // Excel destino
-  const selectorDiv    = document.getElementById('selectorCitas');
-  const citaSelect     = document.getElementById('citaSelect');
-  const detalleDiv     = document.getElementById('detalleYFormulario');
-  const datosCitaPre   = document.getElementById('datosCita');
-  const formAtencion   = document.getElementById('trabajadorForm');
+  const txtInput            = document.getElementById('fileInput');           // BD.txt
+  const excelInput          = document.getElementById('excelInput');         // Excel destino
+  const selectorDiv         = document.getElementById('selectorCitas');
+  const citaSelect          = document.getElementById('citaSelect');
+  const detalleDiv          = document.getElementById('detalleYFormulario');
+  const datosCitaPre        = document.getElementById('datosCita');
+  const formAtencion        = document.getElementById('trabajadorForm');
+
+  // Inputs para calcular ingresos
+  const costoSrvInput       = document.getElementById('costoServicioCliente');
+  const costoMedInput       = document.getElementById('costoPromedioMedicamento');
+  const insumosVetInput     = document.getElementById('insumosCostoVeterinaria');
+  const ingresosDisplay     = document.getElementById('ingresosVeterinariaDisplay');
 
   let citas = [], headersTxt = [];
   let workbook, sheetName;
+
+  // Función que recalcula ingresos y los muestra
+  function updateIngresos() {
+    const costoSrv  = parseFloat(costoSrvInput.value) || 0;
+    const costoMed  = parseFloat(costoMedInput.value) || 0;
+    const insumosV  = parseFloat(insumosVetInput.value) || 0;
+    const ingresos  = costoSrv + costoMed - insumosV;
+    ingresosDisplay.value = ingresos.toFixed(2);
+    return ingresos;
+  }
+
+  // Listeners para recalcular en cada cambio
+  [costoSrvInput, costoMedInput, insumosVetInput].forEach(el =>
+    el.addEventListener('input', updateIngresos)
+  );
 
   // --- 1) Cargar BD.txt ---
   txtInput.addEventListener('change', e => {
@@ -25,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
         headersTxt.forEach((h,i) => obj[h] = cols[i]);
         return obj;
       });
-      // Poblar selector
       citaSelect.innerHTML = '<option value="">-- elige --</option>';
       citas.forEach((c,i) => {
         const opt = document.createElement('option');
@@ -72,6 +93,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Datos de la cita
     const cita = citas[citaSelect.value];
 
+    // Obtener ingresos ya calculados
+    const ingresosVeterinaria = updateIngresos();
+
     // Datos ingresados por el trabajador
     const fd = new FormData(formAtencion);
     const at = {
@@ -106,18 +130,13 @@ document.addEventListener('DOMContentLoaded', () => {
     );
     const esperaMin = Math.round((fechaAt - fechaAgendada) / 60000);
 
-    // Calcular Ingresos veterinaria
-    const ingresosVeterinaria = at.costoServicioCliente
-      + at.costoPromedioMedicamento
-      - at.insumosCostoVeterinaria;
-
     // --- Leer hoja y datos actuales ---
     const ws   = workbook.Sheets[sheetName];
     const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
 
     // Construir nueva fila con el orden indicado
     const newRow = [
-      idMascota,                        // ID Mascota aleatorio
+      idMascota,                          // ID Mascota aleatorio
       cita.nombreMascota,
       cita.edadMascota,
       cita.sexoMascota,
@@ -129,24 +148,24 @@ document.addEventListener('DOMContentLoaded', () => {
       cita.region,
       cita.servicio,
       cita.subservicio,
-      at.razonServicio,                 // Razón Atención Servicio
-      cita.dia,                         // Día
-      cita.mes,                         // Mes
-      cita.año,                         // Año
-      cita.hora,                        // Hora agendada
-      at.horaAtencion,                  // Hora atención
-      esperaMin,                        // Tiempo de Espera (minutos)
-      at.rutEspecialista,               // RUT especialista
-      at.nombreEspecialista,            // Nombre especialista
-      at.emiteReceta,                   // ¿Se emite receta?
-      at.emiteDiagnostico,              // ¿Se emite diagnóstico?
-      at.diagnostico,                   // Diagnóstico
-      at.costoServicioCliente,          // Costo Servicio (cliente)
-      at.costoPromedioMedicamento,      // Costo Promedio Medicamento(s)
-      at.insumos,                       // Insumos
-      at.tipoCosto,                     // Tipo de costo
-      at.insumosCostoVeterinaria,       // Insumos(costo promedio veterinaria)
-      ingresosVeterinaria               // Ingresos veterinaria (calculado)
+      at.razonServicio,                   // Razón Atención Servicio
+      cita.dia,                           // Día
+      cita.mes,                           // Mes
+      cita.año,                           // Año
+      cita.hora,                          // Hora agendada
+      at.horaAtencion,                    // Hora atención
+      esperaMin,                          // Tiempo de Espera (minutos)
+      at.rutEspecialista,                 // RUT especialista
+      at.nombreEspecialista,              // Nombre especialista
+      at.emiteReceta,                     // ¿Se emite receta?
+      at.emiteDiagnostico,                // ¿Se emite diagnóstico?
+      at.diagnostico,                     // Diagnóstico
+      at.costoServicioCliente,            // Costo Servicio (cliente)
+      at.costoPromedioMedicamento,        // Costo Promedio Medicamento(s)
+      at.insumos,                         // Insumos
+      at.tipoCosto,                       // Tipo de costo
+      at.insumosCostoVeterinaria,         // Insumos(costo promedio veterinaria)
+      ingresosVeterinaria                 // Ingresos veterinaria (calculado)
     ];
 
     data.push(newRow);

@@ -73,16 +73,14 @@
         </label>
       </div>
 
-      <div>
-        <label>Costo Servicio (cliente)<br/>
-          <input type="number" name="costoServicioCliente" step="0.01" required />
-        </label>
+      <div class="campo">
+        <label for="costoServicioCliente">Costo Servicio (cliente)</label>
+          <input type="number" id="costoServicioCliente" name="costoServicioCliente" step="0.01" required />
       </div>
 
-      <div>
-        <label>Costo Promedio Medicamento(s) (cliente)<br/>
-          <input type="number" name="costoPromedioMedicamento" step="0.01" required />
-        </label>
+      <div class="campo">
+        <label for="costoPromedioMedicamento">Costo Promedio Medicamento(s) (cliente)</label>
+          <input type="number" id="costoPromedioMedicamento" name="costoPromedioMedicamento" step="0.01" required />
       </div>
 
       <div>
@@ -103,16 +101,15 @@
         </label>
       </div>
 
-      <div>
-        <label>Insumos (costo promedio veterinaria)<br/>
-          <input type="number" name="insumosCostoVeterinaria" step="0.01" />
-        </label>
+      <div class="campo">
+        <label for="insumosCostoVeterinaria">Insumos (costo promedio veterinaria)</label>
+        <input type="number" id="insumosCostoVeterinaria" name="insumosCostoVeterinaria" step="0.01" required />
       </div>
 
-      <div>
-        <label>Ingresos veterinaria<br/>
-          <input type="number" name="ingresosVeterinaria" step="0.01" />
-        </label>
+      <!-- NUEVO: mostrar el cálculo -->
+      <div class="campo">
+        <label for="ingresosVeterinariaDisplay">Ingresos Veterinaria</label>
+        <input type="text" id="ingresosVeterinariaDisplay" readonly value="0.00" />
       </div>
 
       <button type="submit">Guardar Atención</button>
