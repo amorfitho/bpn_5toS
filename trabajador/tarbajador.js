@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = evt => {
-      // Leer workbook con SheetJS
       workbook  = XLSX.read(evt.target.result, { type: 'binary' });
       sheetName = workbook.SheetNames[0];
       alert(`Excel cargado: ${file.name} (hoja: ${sheetName})`);
@@ -67,54 +66,58 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- 4) Envío del formulario de atención y append al Excel ---
   formAtencion.addEventListener('submit', e => {
     e.preventDefault();
-    // Validaciones mínimas
     if (!workbook) return alert('Primero selecciona el Excel destino.');
     if (citaSelect.value === '') return alert('Selecciona una cita.');
 
-    // Datos de la cita pre-llenada
-    const cita = citas[ citaSelect.value ];
+    // Datos de la cita
+    const cita = citas[citaSelect.value];
 
-    // Datos que el trabajador acaba de ingresar
+    // Datos ingresados por el trabajador
     const fd = new FormData(formAtencion);
-    const at   = {
-      razonServicio:          fd.get('razonServicio'),
-      horaAtencion:           fd.get('horaAtencion'),
-      rutEspecialista:        fd.get('rutEspecialista'),
-      nombreEspecialista:     fd.get('nombreEspecialista'),
-      emiteReceta:            fd.get('emiteReceta'),
-      emiteDiagnostico:       fd.get('emiteDiagnostico'),
-      diagnostico:            fd.get('diagnostico') || '',
-      costoServicioCliente:   fd.get('costoServicioCliente'),
-      costoPromedioMedicamento: fd.get('costoPromedioMedicamento'),
-      insumos:                fd.get('insumos'),
-      tipoCosto:              fd.get('tipoCosto'),
-      insumosCostoVeterinaria: fd.get('insumosCostoVeterinaria'),
-      ingresosVeterinaria:    fd.get('ingresosVeterinaria')
+    const at = {
+      razonServicio:              fd.get('razonServicio'),
+      horaAtencion:               fd.get('horaAtencion'),
+      rutEspecialista:            fd.get('rutEspecialista'),
+      nombreEspecialista:         fd.get('nombreEspecialista'),
+      emiteReceta:                fd.get('emiteReceta'),
+      emiteDiagnostico:           fd.get('emiteDiagnostico'),
+      diagnostico:                fd.get('diagnostico') || '',
+      costoServicioCliente:       parseFloat(fd.get('costoServicioCliente')) || 0,
+      costoPromedioMedicamento:   parseFloat(fd.get('costoPromedioMedicamento')) || 0,
+      insumosCostoVeterinaria:    parseFloat(fd.get('insumosCostoVeterinaria')) || 0,
+      insumos:                    fd.get('insumos'),
+      tipoCosto:                  fd.get('tipoCosto')
     };
 
+    // Generar ID aleatorio de 4 dígitos
+    const idMascota = Math.floor(1000 + Math.random() * 9000);
+
     // Calcular Tiempo de Espera en minutos
-    // Convierte fecha y hora agendada + hora atención a Date para diff
     const fechaAgendada = new Date(
-      Number(cita.año), Number(cita.mes)-1, Number(cita.dia),
-      ...cita.hora.split(':').map(x=>Number(x))
+      Number(cita.año), Number(cita.mes) - 1, Number(cita.dia),
+      ...cita.hora.split(':').map(x => Number(x))
     );
-    const horaAt       = fd.get('horaAtencion').split(':').map(x=>Number(x));
-    const fechaAt      = new Date(
+    const [hAt, mAt] = at.horaAtencion.split(':').map(x => Number(x));
+    const fechaAt    = new Date(
       fechaAgendada.getFullYear(),
       fechaAgendada.getMonth(),
       fechaAgendada.getDate(),
-      horaAt[0], horaAt[1]
+      hAt, mAt
     );
-    const esperaMin = Math.round( (fechaAt - fechaAgendada) / 60000 );
+    const esperaMin = Math.round((fechaAt - fechaAgendada) / 60000);
 
-    // --- 4.1) Leer hoja y datos actuales ---
+    // Calcular Ingresos veterinaria
+    const ingresosVeterinaria = at.costoServicioCliente
+      + at.costoPromedioMedicamento
+      - at.insumosCostoVeterinaria;
+
+    // --- Leer hoja y datos actuales ---
     const ws   = workbook.Sheets[sheetName];
     const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
-    // Asume que la primera fila es cabecera
-    // Append fila en el mismo orden que tu estructura:
+
+    // Construir nueva fila con el orden indicado
     const newRow = [
-      // ID Mascota y datos de la cita
-      cita.idMascota,
+      idMascota,                        // ID Mascota aleatorio
       cita.nombreMascota,
       cita.edadMascota,
       cita.sexoMascota,
@@ -126,37 +129,30 @@ document.addEventListener('DOMContentLoaded', () => {
       cita.region,
       cita.servicio,
       cita.subservicio,
-      // Datos del trabajador
-      at.razonServicio,
-      // Fecha original
-      cita.dia,
-      cita.mes,
-      cita.año,
-      cita.hora,
-      // Hora de atención y espera
-      at.horaAtencion,
-      esperaMin,
-      // Especialista
-      at.rutEspecialista,
-      at.nombreEspecialista,
-      // Receta / diagnóstico
-      at.emiteReceta,
-      at.emiteDiagnostico,
-      at.diagnostico,
-      // Costos e insumos
-      at.costoServicioCliente,
-      at.costoPromedioMedicamento,
-      at.insumos,
-      at.tipoCosto,
-      at.insumosCostoVeterinaria,
-      at.ingresosVeterinaria
+      at.razonServicio,                 // Razón Atención Servicio
+      cita.dia,                         // Día
+      cita.mes,                         // Mes
+      cita.año,                         // Año
+      cita.hora,                        // Hora agendada
+      at.horaAtencion,                  // Hora atención
+      esperaMin,                        // Tiempo de Espera (minutos)
+      at.rutEspecialista,               // RUT especialista
+      at.nombreEspecialista,            // Nombre especialista
+      at.emiteReceta,                   // ¿Se emite receta?
+      at.emiteDiagnostico,              // ¿Se emite diagnóstico?
+      at.diagnostico,                   // Diagnóstico
+      at.costoServicioCliente,          // Costo Servicio (cliente)
+      at.costoPromedioMedicamento,      // Costo Promedio Medicamento(s)
+      at.insumos,                       // Insumos
+      at.tipoCosto,                     // Tipo de costo
+      at.insumosCostoVeterinaria,       // Insumos(costo promedio veterinaria)
+      ingresosVeterinaria               // Ingresos veterinaria (calculado)
     ];
 
     data.push(newRow);
 
-    // --- 4.2) Sobreescribir sheet y descargar Excel ---
-    const newWs = XLSX.utils.aoa_to_sheet(data);
-    workbook.Sheets[sheetName] = newWs;
+    // --- Sobreescribir sheet y descargar Excel actualizado ---
+    workbook.Sheets[sheetName] = XLSX.utils.aoa_to_sheet(data);
     XLSX.writeFile(workbook, 'Trabajo_actualizado.xlsx');
 
     alert('Atención registrada y Excel descargado.');
