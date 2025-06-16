@@ -65,6 +65,11 @@ document.addEventListener('DOMContentLoaded', () => {
     a.click();
     URL.revokeObjectURL(url);
 
+    // 6) Limpiar formulario
     form.reset();
+
+    // 7) Redirección a la página de trabajador
+    // Ajusta la ruta si tu archivo está en otra carpeta
+    window.location.href = '../trabajador/trabajador.html';
   });
 });
