@@ -3,117 +3,93 @@
 <head>
   <meta charset="UTF-8" />
   <title>Vista Trabajador</title>
-  <link rel="stylesheet" href="../agenda/agenda.css" />
+  <link rel="stylesheet" href="../trabajador/trabajador.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <h1>Vista Trabajador</h1>
+  <div class="container">
+    <h1>Vista Trabajador</h1>
 
-  <!-- 1. Carga del fichero BD.txt -->
-  <label for="fileInput">Cargar BD.txt:</label>
-  <input type="file" id="fileInput" accept=".txt" />
-  <hr/>
-  <!-- 1. Carga del fichero exel base de datos -->
-  <label for="excelInput">Selecciona Excel destino:</label>
-  <input type="file" id="excelInput" accept=".xlsx,.xls" />
+    <!-- Subir archivo BD -->
+    <div class="seccion">
+      <label for="fileInput">
+        <strong>Cargar archivo de base de datos (.txt)</strong><br>
+        <span class="instruccion">Selecciona el archivo <code>BD.txt</code> con los registros de citas agendadas.</span>
+      </label>
+      <input type="file" id="fileInput" accept=".txt" />
+    </div>
 
-  <!-- 2. Selector de citas -->
-  <div id="selectorCitas" style="display:none; margin-top:1em;">
-    <label for="citaSelect">Selecciona una cita:</label>
-    <select id="citaSelect">
-      <option value="">-- elige --</option>
-    </select>
-  </div>
+    <hr/>
 
-  <!-- 3. Contenedor para mostrar datos de la cita + formulario -->
-  <div id="detalleYFormulario" style="display:none; margin-top:2em;">
-    <h2>Datos de la Cita</h2>
-    <pre id="datosCita"></pre>
+    <!-- Subir archivo Excel -->
+    <div class="seccion">
+      <label for="excelInput">
+        <strong>Selecciona archivo Excel destino</strong><br>
+        <span class="instruccion">Este archivo recibirá los datos actualizados por el trabajador.</span>
+      </label>
+      <input type="file" id="excelInput" accept=".xlsx,.xls" />
+    </div>
 
-    <h2>Formulario de Atención</h2>
-    <form id="trabajadorForm">
-      <div>
-        <label>Razón Atención Servicio<br/>
-          <input type="text" name="razonServicio" required />
-        </label>
-      </div>
+    <!-- Selector de citas -->
+    <div id="selectorCitas" class="seccion" style="display:none;">
+      <label for="citaSelect"><strong>Selecciona una cita:</strong></label>
+      <select id="citaSelect">
+        <option value="">-- elige --</option>
+      </select>
+    </div>
 
-      <div>
-        <label>Hora atención<br/>
-          <input type="time" name="horaAtencion" required />
-        </label>
-      </div>
+    <!-- Detalle de cita y formulario -->
+    <div id="detalleYFormulario" class="seccion" style="display:none;">
+      <h2>Datos de la Cita</h2>
+      <pre id="datosCita"></pre>
 
-      <div>
-        <label>RUT especialista<br/>
-          <input type="text" name="rutEspecialista" required />
-        </label>
-      </div>
+      <h2>Formulario de Atención</h2>
+      <form id="trabajadorForm">
+        <div><label>Razón Atención Servicio<br/><input type="text" name="razonServicio" required /></label></div>
+        <div><label>Hora atención<br/><input type="time" name="horaAtencion" required /></label></div>
+        <div><label>RUT especialista<br/><input type="text" name="rutEspecialista" required /></label></div>
+        <div><label>Nombre especialista<br/><input type="text" name="nombreEspecialista" required /></label></div>
 
-      <div>
-        <label>Nombre especialista<br/>
-          <input type="text" name="nombreEspecialista" required />
-        </label>
-      </div>
+        <div>
+          <span>¿Se emite receta?</span><br/>
+          <label><input type="radio" name="emiteReceta" value="sí" required /> Sí</label>
+          <label><input type="radio" name="emiteReceta" value="no" /> No</label>
+        </div>
 
-      <div>
-        <span>¿Se emite receta?</span><br/>
-        <label><input type="radio" name="emiteReceta" value="sí" required /> Sí</label>
-        <label><input type="radio" name="emiteReceta" value="no" /> No</label>
-      </div>
+        <div>
+          <span>¿Se emite diagnóstico?</span><br/>
+          <label><input type="radio" name="emiteDiagnostico" value="sí" required /> Sí</label>
+          <label><input type="radio" name="emiteDiagnostico" value="no" /> No</label>
+        </div>
 
-      <div>
-        <span>¿Se emite diagnóstico?</span><br/>
-        <label><input type="radio" name="emiteDiagnostico" value="sí" required /> Sí</label>
-        <label><input type="radio" name="emiteDiagnostico" value="no" /> No</label>
-      </div>
+        <div id="campoDiagnostico" style="display:none;">
+          <label>Diagnóstico<br/><textarea name="diagnostico" rows="2"></textarea></label>
+        </div>
 
-      <div id="campoDiagnostico" style="display:none;">
-        <label>Diagnóstico<br/>
-          <textarea name="diagnostico" rows="2"></textarea>
-        </label>
-      </div>
+        <div class="campo"><label>Costo Servicio (cliente)<input type="number" name="costoServicioCliente" step="0.01" required /></label></div>
+        <div class="campo"><label>Costo Promedio Medicamento(s) (cliente)<input type="number" name="costoPromedioMedicamento" step="0.01" required /></label></div>
+        <div><label>Insumos<br/><input type="text" name="insumos" /></label></div>
 
-      <div class="campo">
-        <label for="costoServicioCliente">Costo Servicio (cliente)</label>
-          <input type="number" id="costoServicioCliente" name="costoServicioCliente" step="0.01" required />
-      </div>
+        <div>
+          <label>Tipo de costo<br/>
+            <select name="tipoCosto" required>
+              <option value="">--Selecciona el Tipo de costo--</option>
+              <option>Por Uso</option>
+              <option>Mensual</option>
+              <option>Mensual/Uso</option>
+            </select>
+          </label>
+        </div>
 
-      <div class="campo">
-        <label for="costoPromedioMedicamento">Costo Promedio Medicamento(s) (cliente)</label>
-          <input type="number" id="costoPromedioMedicamento" name="costoPromedioMedicamento" step="0.01" required />
-      </div>
+        <div class="campo"><label>Insumos (costo promedio veterinaria)<input type="number" name="insumosCostoVeterinaria" step="0.01" required /></label></div>
+        <div class="campo"><label>Ingresos Veterinaria<input type="text" id="ingresosVeterinariaDisplay" readonly value="0.00" /></label></div>
 
-      <div>
-        <label>Insumos<br/>
-          <input type="text" name="insumos" />
-        </label>
-      </div>
+        <button type="submit">Guardar Atención</button>
+      </form>
+    </div>
 
-      <div>
-        <label>Tipo de costo<br/>
-          <select name="tipoCosto" required>
-            <option value="">--Selecciona el Tipo de costo--</option>
-            <!--opciones de servicios -->
-            <option>Por Uso</option>
-            <option>Mensual</option>
-            <option>Mensual/Uso</option>
-          </select>
-        </label>
-      </div>
-
-      <div class="campo">
-        <label for="insumosCostoVeterinaria">Insumos (costo promedio veterinaria)</label>
-        <input type="number" id="insumosCostoVeterinaria" name="insumosCostoVeterinaria" step="0.01" required />
-      </div>
-
-      <!-- NUEVO: mostrar el cálculo -->
-      <div class="campo">
-        <label for="ingresosVeterinariaDisplay">Ingresos Veterinaria</label>
-        <input type="text" id="ingresosVeterinariaDisplay" readonly value="0.00" />
-      </div>
-
-      <button type="submit">Guardar Atención</button>
-    </form>
+    <!-- Botón volver -->
+    <a href="../Index/index.html" class="btn-volver">Volver al inicio</a>
   </div>
 
   <script src="tarbajador.js"></script>
