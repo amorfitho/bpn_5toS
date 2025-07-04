@@ -9,3 +9,5 @@ def home(request):
 def agenda(request):
     return render(request, 'template/agendar')
 
+def empleado(request):
+    return render(request, 'template/empleado')
