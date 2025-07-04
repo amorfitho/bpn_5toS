@@ -85,3 +85,4 @@ class Coste_subservicio(models.Model):
 
     def __str__(self):
         return self.coste
+    

@@ -4,10 +4,13 @@ from django.shortcuts import render
 
 
 def home(request):
-    return render(request, 'template/home')
+    return render(request, 'app/home.html')
 
 def agenda(request):
-    return render(request, 'template/agendar')
+    return render(request, 'app/agendar.html')
 
 def empleado(request):
-    return render(request, 'template/empleado')
+    return render(request, 'app/empleado.html')
+
+def login(request):
+    return render(request, 'app/login,html')
