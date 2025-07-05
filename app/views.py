@@ -11,5 +11,8 @@ def agenda(request):
 def trabajador(request):
     return render(request, 'app/trabajador.html')
 
+def lista(request):
+    return render(request, 'app/lista.html')
+
 def login(request):
     return render(request, 'app/login,html')
