@@ -1,0 +1,20 @@
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Generar Cita para {{ form.agenda_data.nombre_mascota }}</h2>
+
+    <div class="mb-3">
+        <p><strong>RUT del dueño:</strong> {{ form.agenda_data.rut_dueño }}</p>
+        <p><strong>Nombre del dueño:</strong> {{ form.agenda_data.nombre_duenio }}</p>
+        <p><strong>Nombre de la mascota:</strong> {{ form.agenda_data.nombre_mascota }}</p>
+        <p><strong>Fecha agendada:</strong> {{ form.agenda_data.fecha_agendada }}</p>
+        <p><strong>Hora agendada:</strong> {{ form.agenda_data.hora_agendada }}</p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Guardar Cita</button>
+    </form>
+</div>
+{% endblock %}

@@ -5,7 +5,7 @@ class Agendar(models.Model):
     id_agenda = models.AutoField(primary_key=True)
     nombre_mascota = models.CharField(max_length=50)
     edad_mascota = models. IntegerField()
-    tipo_edad = models.CharField(max_length=4, null=True, blank=True)
+    tipo_edad = models.CharField(max_length=6, null=True, blank=True)
     sexo_mascota = models.CharField(max_length=10) 
     tipo_animal = models.CharField(max_length=50)
     raza_mascota = models.CharField(max_length=80)
@@ -27,7 +27,6 @@ class Agendar(models.Model):
 class Cita(models.Model):
     id_cita = models.IntegerField()
     id_agenda=models.ForeignKey(Agendar, on_delete=models.PROTECT,default=0)
-    id_mascota = models.IntegerField(default=0)
     nombre_mascota = models.CharField(max_length=50)
     edad_mascota = models. IntegerField()
     tipo_edad = models.CharField(max_length=4,null=True, blank=True)

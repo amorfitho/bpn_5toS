@@ -1,0 +1,36 @@
+{% block content %}
+<div class="container mt-4">
+    <h2>Lista de Agendas Registradas</h2>
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="thead-dark">
+            <tr>
+                <th>RUT del Dueño</th>
+                <th>Nombre del Dueño</th>
+                <th>Nombre de la Mascota</th>
+                <th>Fecha de Atención</th>
+                <th>Hora de Atención</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for agenda in agendas %}
+            <tr>
+                <td>{{ agenda.rut_dueño }}</td>
+                <td>{{ agenda.nombre_duenio }} {{ agenda.apellido_duenio }}</td>
+                <td>{{ agenda.nombre_mascota }}</td>
+                <td>{{ agenda.fecha_agendada }}</td>
+                <td>{{ agenda.hora_agendada }}</td>
+                <td>
+                    <a href="{% url 'trabajador' agenda.id_agenda %}" class="btn btn-primary btn-sm">Cita</a>
+                    <a href="{% url 'eliminar_agenda' agenda.id_agenda %}" class="btn btn-danger btn-sm">Eliminar</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">No hay agendas registradas.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
