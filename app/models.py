@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class Agendar(models.Model):
-    id_agenda=models.IntegerField() 
+    id_agenda = models.AutoField(primary_key=True)
     nombre_mascota = models.CharField(max_length=50)
     edad_mascota = models. IntegerField()
     tipo_edad = models.CharField(max_length=4, null=True, blank=True)
@@ -10,7 +10,7 @@ class Agendar(models.Model):
     tipo_animal = models.CharField(max_length=50)
     raza_mascota = models.CharField(max_length=80)
     rut_dueño=models.IntegerField()
-    nombre_duenio = models.CharField(max_length=20)
+    nombre_duenio = models.CharField(max_length=50)
     apellido_duenio= models.CharField(max_length=250) 
     email_duenio = models.CharField(max_length=250) 
     celular_duenio = models.IntegerField()
