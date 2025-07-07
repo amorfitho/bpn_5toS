@@ -1,4 +1,27 @@
+{% load static %}
+
+{% block js %}
+<script src="{% static 'app/js/lista.js' %}"></script>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
+<link rel="stylesheet" href="{% static 'app/css/lista.css' %}">
+{% endblock %}
 {% block content %}
+<nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <div class="logo">
+                    <img src="{% static 'app/img/paw.png' %}" alt="">
+                </div>
+                <a href="{% url 'home' %}" class="navbar-title">Mascota Feliz</a>
+            </div>
+            <a href="{% url 'login' %}" class="navbar-user">
+                <div class="user-icon"></div>
+            </a>
+        </div>
+    </nav>
 <div class="container mt-4">
     <h2>Lista de Agendas Registradas</h2>
     <table class="table table-bordered table-striped mt-3">
@@ -22,7 +45,7 @@
                 <td>{{ agenda.hora_agendada }}</td>
                 <td>
                     <a href="{% url 'trabajador' agenda.id_agenda %}" class="btn btn-primary btn-sm">Cita</a>
-                    <a href="{% url 'eliminar_agenda' agenda.id_agenda %}" class="btn btn-danger btn-sm">Eliminar</a>
+                    <button class="btn btn-danger btn-sm btn-eliminar" data-id="{{ agenda.id_agenda }}">Eliminar</button>
                 </td>
             </tr>
             {% empty %}
@@ -34,3 +57,4 @@
     </table>
 </div>
 {% endblock %}
+

@@ -1,0 +1,145 @@
+{% load static %}
+
+{% block js %}
+
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
+<link rel="stylesheet" href="{% static 'app/css/home.css' %}">
+{% endblock %}
+{% block content %}
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <div class="logo">
+                    <!-- Replace this placeholder with your logo image -->
+                    <img src="{% static 'app/img/paw.png' %}" alt="">
+                </div>
+                <a href="{% url 'home' %}" class="navbar-title">Mascota Feliz</a>
+            </div>
+            <a href="{% url 'login' %}" class="navbar-user">
+                <div class="user-icon"></div>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="welcome-title">¡Bienvenido/a a Mascota Feliz!</h1>
+            <p class="unique-message">
+                Somos la clínica veterinaria de confianza donde tu mascota recibe atención personalizada con amor y profesionalismo. 
+                Nuestro equipo de especialistas se dedica a brindar el mejor cuidado para que tu compañero viva una vida plena y saludable.
+            </p>
+        </div>
+    </section>
+
+    <!-- Carousel Section -->
+    <section class="carousel-section">
+        <div class="container">
+            <div class="carousel-container">
+                <div class="carousel-wrapper" id="carouselWrapper">
+                    <div class="carousel-slide">
+                        <!-- Replace with your first image -->
+                        <img src="{% static 'app/img/dog1.1.png' %}" alt="Imagen 1">
+                    </div>
+                    <div class="carousel-slide">
+                        <!-- Replace with your second image -->
+                        <img src="{% static 'app/img/bird1.1.png' %}" alt="Imagen 2">
+                    </div>
+                    <div class="carousel-slide">
+                        <!-- Replace with your third image -->
+                        <img src="{% static 'app/img/cat.png' %}" alt="Imagen 3"> 
+                    </div>
+                </div>
+                
+                <!-- Navigation Buttons -->
+                <button class="carousel-nav carousel-prev" onclick="previousSlide()">‹</button>
+                <button class="carousel-nav carousel-next" onclick="nextSlide()">›</button>
+            </div>
+            
+            <!-- Carousel Indicators -->
+            <div class="carousel-indicators">
+                <div class="indicator active" onclick="currentSlide(1)"></div>
+                <div class="indicator" onclick="currentSlide(2)"></div>
+                <div class="indicator" onclick="currentSlide(3)"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Section -->
+    <section class="booking-section">
+        <div class="container">
+            <h2 class="booking-title">¡Agenda tu hora!</h2>
+            <a href="{% url 'agendar' %}" class="booking-btn">Agendar servicio</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="footer-text">© 2025 Mascota Feliz. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.carousel-slide');
+        const indicators = document.querySelectorAll('.indicator');
+        const totalSlides = slides.length;
+
+        function showSlide(index) {
+            const wrapper = document.getElementById('carouselWrapper');
+            wrapper.style.transform = `translateX(-${index * 100}%)`;
+            
+            // Update indicators
+            indicators.forEach((indicator, i) => {
+                indicator.classList.toggle('active', i === index);
+            });
+            
+            currentSlideIndex = index;
+        }
+
+        function nextSlide() {
+            const nextIndex = (currentSlideIndex + 1) % totalSlides;
+            showSlide(nextIndex);
+        }
+
+        function previousSlide() {
+            const prevIndex = (currentSlideIndex - 1 + totalSlides) % totalSlides;
+            showSlide(prevIndex);
+        }
+
+        function currentSlide(index) {
+            showSlide(index - 1);
+        }
+
+        // Auto-advance carousel every 5 seconds
+        setInterval(nextSlide, 5000);
+
+        // Add entrance animations on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe sections for animation
+        document.querySelectorAll('.carousel-section, .booking-section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+{% endblock %}

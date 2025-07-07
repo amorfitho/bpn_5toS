@@ -1,0 +1,302 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Fondo y fuente base */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #a8d5a8 0%, #c8e6c8 50%, #e8f5e8 100%);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Botón volver (reutilizable) */
+.back-button {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    color: #2d5a2d;
+    font-size: 1.5rem;
+}
+
+.back-button:hover {
+    background: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.back-arrow {
+    width: 24px;
+    height: 24px;
+    position: relative;
+}
+
+.back-arrow::before {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 2px;
+    background: currentColor;
+    top: 50%;
+    left: 6px;
+    transform: translateY(-50%);
+}
+
+.back-arrow::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-left: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    top: 50%;
+    left: 6px;
+    transform: translateY(-50%) rotate(45deg);
+    transform-origin: center;
+}
+
+/* Tarjeta principal del formulario */
+.agendar-card {
+    background: white;
+    border-radius: 20px;
+    padding: 3rem 2.5rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Título */
+.agendar-title {
+    text-align: center;
+    color: #2d5a2d;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 2.5rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Contenedor de formulario */
+.agendar-form .form-wrapper p {
+    margin-bottom: 1.8rem;
+}
+
+.agendar-form label {
+    display: block;
+    color: #2d5a2d;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.agendar-form input,
+.agendar-form select,
+.agendar-form textarea {
+    width: 100%;
+    padding: 1rem 1.2rem;
+    border: 2px solid #e8f5e8;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #fafffe;
+    color: #333;
+}
+
+.agendar-form input:focus,
+.agendar-form select:focus,
+.agendar-form textarea:focus {
+    outline: none;
+    border-color: #a8d5a8;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(168, 213, 168, 0.1);
+    transform: translateY(-1px);
+}
+
+.agendar-form input.error,
+.agendar-form select.error,
+.agendar-form textarea.error {
+    border-color: #ff9999;
+    background: #fff5f5;
+}
+
+/* Botón agendar */
+.login-button {
+    width: 100%;
+    background: linear-gradient(135deg, #a8d5a8 0%, #8cc98c 100%);
+    color: white;
+    padding: 1.2rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 2rem;
+    box-shadow: 0 4px 15px rgba(168, 213, 168, 0.3);
+}
+
+.login-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(168, 213, 168, 0.4);
+    background: linear-gradient(135deg, #8cc98c 0%, #7ab87a 100%);
+}
+
+.login-button:active {
+    transform: translateY(0);
+}
+
+.login-button.loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.login-button.loading::after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Mensaje de error */
+.error-message {
+    color: #ff6b6b;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    display: none;
+}
+
+.error-message.show {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .back-button {
+        top: 1rem;
+        left: 1rem;
+        width: 45px;
+        height: 45px;
+    }
+
+    .agendar-card {
+        padding: 2rem 1.5rem;
+        margin: 1rem;
+    }
+
+    .agendar-title {
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+    }
+
+    .agendar-form input,
+    .agendar-form select,
+    .agendar-form textarea {
+        padding: 0.9rem 1rem;
+    }
+
+    .login-button {
+        padding: 1rem;
+        font-size: 1rem;
+    }
+}
+
+/* Back Button */
+        .back-button {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            color: #2d5a2d;
+            font-size: 1.5rem;
+        }
+
+        .back-button:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Back arrow icon */
+        .back-arrow {
+            width: 24px;
+            height: 24px;
+            position: relative;
+        }
+
+        .back-arrow::before {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 2px;
+            background: currentColor;
+            top: 50%;
+            left: 6px;
+            transform: translateY(-50%);
+        }
+
+        .back-arrow::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-left: 2px solid currentColor;
+            border-bottom: 2px solid currentColor;
+            top: 50%;
+            left: 6px;
+            transform: translateY(-50%) rotate(45deg);
+            transform-origin: center;
+        }

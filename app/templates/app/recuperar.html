@@ -1,0 +1,89 @@
+{% load static %}
+
+{% block js %}
+<script src="{% static 'app/js/recuperar.js' %}"></script>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
+<link rel="stylesheet" href="{% static 'app/css/recuperar.css' %}">
+{% endblock %}
+{% block content %}
+</head>
+<body>
+    <!-- Back Button -->
+    <button class="back-button" onclick="goBack()">
+        <div class="back-arrow"></div>
+    </button>
+
+    <!-- Recovery Card -->
+    <div class="recovery-card">
+        <!-- Initial Form State -->
+        <div id="formState">
+            <div class="icon-container">
+                <div class="lock-icon">
+                    <div class="keyhole"></div>
+                </div>
+            </div>
+            
+            <h1 class="recovery-title">Recuperar Contraseña</h1>
+            <p class="recovery-subtitle">
+                Ingresa tu RUT y te enviaremos un enlace para restablecer tu contraseña
+            </p>
+            
+            <form id="recoveryForm" onsubmit="handleRecovery(event)">
+                <!-- RUT Field -->
+                <div class="form-group">
+                    <label for="rut" class="form-label">RUT</label>
+                    <input 
+                        type="text" 
+                        id="rut" 
+                        name="rut" 
+                        class="form-input" 
+                        placeholder="Ej: 12345678-9 o 12.345.678-9"
+                        maxlength="12"
+                        oninput="formatRUT(this)"
+                        required
+                    >
+                    <div class="rut-helper">Ingresa tu RUT con o sin puntos</div>
+                    <div class="error-message" id="rutError">Por favor, ingresa un RUT válido</div>
+                    <div class="success-message" id="rutSuccess">RUT válido</div>
+                </div>
+
+                <!-- Recovery Button -->
+                <button type="submit" class="recovery-button" id="recoveryBtn">
+                    Enviar Enlace de Recuperación
+                </button>
+            </form>
+
+            <!-- Links Section -->
+            <div class="links-section">
+                <a href="{% url 'login' %}" class="form-link">Volver al inicio de sesión</a>
+                <a href="{% url 'registro' %}" class="form-link">¿No tienes cuenta? ¡Regístrate ahora!</a>
+            </div>
+        </div>
+
+        <!-- Success State -->
+        <div id="successState" class="success-state">
+            <div class="success-icon">
+                <div class="checkmark"></div>
+            </div>
+            
+            <div class="email-animation">
+                <div class="envelope"></div>
+            </div>
+            
+            <h2 class="success-title">¡Correo Enviado!</h2>
+            <p class="success-text">
+                Hemos enviado un enlace de recuperación a tu correo electrónico asociado. 
+                Revisa tu bandeja de entrada y sigue las instrucciones para restablecer tu contraseña.
+            </p>
+            
+            <div class="links-section">
+                <a href="{% url 'login' %}" class="form-link">Volver al inicio de sesión</a>
+                <a href="#" class="form-link" onclick="showForm()">¿No recibiste el correo? Intentar de nuevo</a>
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}

@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import AgendarForm,CitaForm
 from .models import Agendar, Cita
 from django.contrib import messages
+from django.http import JsonResponse, HttpResponseNotAllowed
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 def home(request):
@@ -12,11 +14,13 @@ def agenda(request):
         form = AgendarForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Se agendó la hora con éxito')
             return redirect('home')  # Redirige al home tras agendar con éxito
     else:
         form = AgendarForm()
 
     return render(request, 'app/agenda.html', {'form': form})
+
 
 def trabajador(request,agenda_id):
      
@@ -55,9 +59,17 @@ def login(request):
     return render(request, 'app/login.html')
 
 def eliminar_agenda(request, agenda_id):
-    agenda = get_object_or_404(Agendar, id_agenda=agenda_id)
     if request.method == 'POST':
-        agenda.delete()
-        messages.success(request, 'La agenda ha sido eliminada correctamente.')
-        return redirect('lista')
-    return render(request, 'app/confirmar_eliminar.html', {'agenda': agenda})
+        try:
+            agenda = Agendar.objects.get(id_agenda=agenda_id)
+            agenda.delete()
+            return JsonResponse({'success': True})
+        except Agendar.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Agenda no encontrada'})
+    return HttpResponseNotAllowed(['POST'])
+
+def recuperar(request):
+    return render(request, 'app/recuperar.html')
+
+def registro(request):
+    return render(request, 'app/registro.html')

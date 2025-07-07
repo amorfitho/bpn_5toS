@@ -88,6 +88,12 @@ class AgendarForm(forms.ModelForm):
         ]
         widgets = {
             'fecha_agendada': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'celular_duenio': forms.TextInput(attrs={
+                'placeholder': '9xxxxxxxx',
+                'maxlength': '9',
+                'inputmode': 'numeric',
+                'class': 'form-input phone-field',
+            }),
         }
 
     def __init__(self, *args, **kwargs):

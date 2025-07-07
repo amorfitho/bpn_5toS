@@ -1,0 +1,138 @@
+{% load static %}
+
+{% block js %}
+<script src="{% static 'app/js/registro.js' %}"></script>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
+<link rel="stylesheet" href="{% static 'app/css/registro.css' %}">
+{% endblock %}
+{% block content %}
+<body>
+    <!-- Back Button -->
+    <button class="back-button" onclick="goBack()">
+        <div class="back-arrow"></div>
+    </button>
+
+    <!-- Register Card -->
+    <div class="register-card">
+        <h1 class="register-title">Crear Cuenta</h1>
+        <p class="register-subtitle">
+            Únete a Mascota Feliz y brinda el mejor cuidado a tu compañero peludo
+        </p>
+        
+        <form id="registerForm" onsubmit="handleRegister(event)">
+            <!-- Full Name Field -->
+            <div class="form-group">
+                <label for="fullName" class="form-label">Nombre Completo</label>
+                <input 
+                    type="text" 
+                    id="fullName" 
+                    name="fullName" 
+                    class="form-input" 
+                    placeholder="Ingresa tu nombre completo"
+                    required
+                >
+                <div class="error-message message" id="nameError">Por favor, ingresa tu nombre completo</div>
+            </div>
+
+            <!-- RUT Field -->
+            <div class="form-group">
+                <label for="rut" class="form-label">RUT</label>
+                <input 
+                    type="text" 
+                    id="rut" 
+                    name="rut" 
+                    class="form-input" 
+                    placeholder="Ej: 12345678-9 o 12.345.678-9"
+                    maxlength="12"
+                    oninput="formatRUT(this)"
+                    onfocus="showRUTExamples()"
+                    onblur="hideRUTExamples()"
+                    required
+                >
+                <div class="rut-helper">Ingresa tu RUT con o sin puntos. El formato se ajustará automáticamente.</div>
+                <div class="rut-examples" id="rutExamples">
+                    <h4>Ejemplos de RUT válidos:</h4>
+                    <ul>
+                        <li class="valid">✓ 12.345.678-9</li>
+                        <li class="valid">✓ 9.876.543-2</li>
+                        <li class="valid">✓ 11.111.111-1</li>
+                        <li class="valid">✓ 22.222.222-k</li>
+                    </ul>
+                </div>
+                <div class="error-message message" id="rutError">Por favor, ingresa un RUT válido</div>
+                <div class="success-message message" id="rutSuccess">RUT válido</div>
+            </div>
+
+            <!-- Email Field -->
+            <div class="form-group">
+                <label for="email" class="form-label">Correo Electrónico</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    class="form-input" 
+                    placeholder="tu@email.com"
+                    oninput="validateEmail(this)"
+                    required
+                >
+                <div class="error-message message" id="emailError">Por favor, ingresa un correo válido</div>
+                <div class="success-message message" id="emailSuccess">Correo válido</div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+                <label for="password" class="form-label">Contraseña</label>
+                <div class="password-container">
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-input" 
+                        placeholder="Crea una contraseña segura"
+                        oninput="checkPasswordStrength(this)"
+                        required
+                    >
+                </div>
+                <div class="password-strength" id="passwordStrength">
+                    <div class="strength-bar">
+                        <div class="strength-fill" id="strengthFill"></div>
+                    </div>
+                    <div class="strength-text" id="strengthText">Ingresa una contraseña</div>
+                </div>
+                <div class="error-message message" id="passwordError">La contraseña debe tener al menos 8 caracteres</div>
+            </div>
+
+            <!-- Confirm Password Field -->
+            <div class="form-group">
+                <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+                <div class="password-container">
+                    <input 
+                        type="password" 
+                        id="confirmPassword" 
+                        name="confirmPassword" 
+                        class="form-input" 
+                        placeholder="Confirma tu contraseña"
+                        oninput="validatePasswordMatch()"
+                        required
+                    >
+                </div>
+                <div class="error-message message" id="confirmPasswordError">Las contraseñas no coinciden</div>
+                <div class="success-message message" id="confirmPasswordSuccess">Las contraseñas coinciden</div>
+            </div>
+
+            <!-- Register Button -->
+            <button type="submit" class="register-button" id="registerBtn">
+                Crear Cuenta
+            </button>
+        </form>
+
+        <!-- Links Section -->
+        <div class="links-section">
+            <a href="{% url 'login' %}" class="form-link">¿Ya tienes cuenta? Inicia sesión</a>
+        </div>
+    </div>
+</body>
+{% endblock %}

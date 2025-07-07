@@ -1,10 +1,28 @@
+{% load static %}
+
+{% block js %}
+<script src="{% static 'app/js/agenda.js' %}"></script>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
+<link rel="stylesheet" href="{% static 'app/css/agenda.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container mt-4">
-    <h2>Agendar hora para tu mascota</h2>
-    <form method="POST">
+<body>
+    <button class="back-button" onclick="goBack()">
+        <div class="back-arrow"></div>
+    </button>
+<div class="agendar-card">
+    <h2 class="agendar-title">Agendar hora para tu mascota</h2>
+    <form method="POST" class="agendar-form">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Agendar</button>
+        <div class="form-wrapper">
+            {{ form.as_p }}
+        </div>
+        <button type="submit" class="login-button">Agendar</button>
     </form>
 </div>
+</body>
 {% endblock %}

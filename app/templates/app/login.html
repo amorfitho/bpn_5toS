@@ -1,0 +1,68 @@
+{% load static %}
+
+{% block js %}
+<script src="{% static 'app/js/login.js' %}"></script>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
+<link rel="stylesheet" href="{% static 'app/css/login.css' %}">
+{% endblock %}
+{% block content %}
+<body>
+    <!-- Back Button -->
+    <button class="back-button" onclick="goBack()">
+        <div class="back-arrow"></div>
+    </button>
+
+    <!-- Login Card -->
+    <div class="login-card">
+        <h1 class="login-title">Iniciar Sesión</h1>
+        
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <!-- RUT Field -->
+            <div class="form-group">
+                <label for="rut" class="form-label">RUT</label>
+                <input 
+                    type="text" 
+                    id="rut" 
+                    name="rut" 
+                    class="form-input" 
+                    placeholder="12.345.678-9"
+                    maxlength="12"
+                    oninput="formatRUT(this)"
+                    required
+                >
+                <div class="error-message" id="rutError">Por favor, ingresa un RUT válido</div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+                <label for="password" class="form-label">Contraseña</label>
+                <div class="password-container">
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-input" 
+                        placeholder="Ingresa tu contraseña"
+                        required
+                    >
+                </div>
+                <div class="error-message" id="passwordError">La contraseña es requerida</div>
+            </div>
+
+            <!-- Login Button -->
+            <button type="submit" class="login-button" id="loginBtn">
+                Ingresar
+            </button>
+        </form>
+
+        <!-- Links Section -->
+        <div class="links-section">
+            <a href="{% url 'recuperar' %}" class="form-link">¿Olvidaste tu contraseña?</a>
+            <a href="{% url 'registro' %}" class="form-link">¿No tienes cuenta? ¡Regístrate ahora!</a>
+        </div>
+    </div>
+</body>
+{% endblock %}
