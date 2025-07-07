@@ -1,53 +1,76 @@
-// ===== SIMPLE LOGIN FUNCTIONS =====
-        
-        // Clean RUT (remove dots and dash, uppercase K)
-        function cleanRUT(rut) {
-            return rut.replace(/[.\-\s]/g, '').toUpperCase();
+// User authentication functions
+        function getUserByRUT(rut) {
+            const users = JSON.parse(localStorage.getItem('mascotaFelizUsers') || '[]');
+            return users.find(user => user.rut === rut);
         }
 
-        // Simple RUT validation - just check basic format
-        function isValidRUTFormat(rut) {
-            const cleanRut = cleanRUT(rut);
-            return /^[0-9]{7,8}[0-9K]$/.test(cleanRut);
+        function validateLogin(rut, password) {
+            const user = getUserByRUT(rut);
+            return user && user.password === password;
         }
 
-        // Format RUT as user types (simple version)
-        function formatRUTLogin(input) {
-            let value = input.value.replace(/[^0-9kK]/g, '').toUpperCase();
+        // Enhanced RUT Formatting and Validation (same as register)
+        function formatRUT(input) {
+            // Remove all non-alphanumeric characters except K
+            let value = input.value.replace(/[^0-9kK]/g, '');
             
-            // Limit to 9 characters max
-            if (value.length > 9) {
-                value = value.substring(0, 9);
+            if (value.length > 1) {
+                let rut = value.slice(0, -1);
+                let dv = value.slice(-1);
+                
+                // Add dots to RUT (only if more than 3 digits)
+                if (rut.length > 3) {
+                    rut = rut.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                }
+                
+                input.value = rut + '-' + dv;
+            } else {
+                input.value = value;
             }
             
-            input.value = value;
-            
-            // Clear error states
+            // Clear error state when user types
             const rutInput = document.getElementById('rut');
             const rutError = document.getElementById('rutError');
             rutInput.classList.remove('error');
             rutError.classList.remove('show');
         }
 
-        // Find user by RUT
-        function getUserByRUT(rut) {
-            const rutClean = cleanRUT(rut);
-            const users = JSON.parse(localStorage.getItem('mascotaFelizUsers') || '[]');
-            return users.find(user => {
-                // Compare clean RUTs
-                const userRutClean = cleanRUT(user.rut);
-                return userRutClean === rutClean;
-            });
+        function validateRUT(rut) {
+            // Remove all formatting
+            const cleanRUT = rut.replace(/[.-\s]/g, '');
+            
+            // Check minimum length (7 digits + 1 verification digit)
+            if (cleanRUT.length < 8 || cleanRUT.length > 9) {
+                return false;
+            }
+            
+            // Separate RUT number from verification digit
+            const rutNumbers = cleanRUT.slice(0, -1);
+            const dv = cleanRUT.slice(-1).toLowerCase();
+            
+            // Validate that RUT numbers are actually numbers
+            if (!/^\d+$/.test(rutNumbers)) {
+                return false;
+            }
+            
+            // Calculate verification digit using Chilean algorithm
+            let sum = 0;
+            let multiplier = 2;
+            
+            // Calculate from right to left
+            for (let i = rutNumbers.length - 1; i >= 0; i--) {
+                sum += parseInt(rutNumbers[i]) * multiplier;
+                multiplier = multiplier === 7 ? 2 : multiplier + 1;
+            }
+            
+            const remainder = sum % 11;
+            const calculatedDV = remainder < 2 ? remainder.toString() : 'k';
+            
+            return dv === calculatedDV;
         }
 
-        // Validate login credentials
-        function validateLogin(rut, password) {
-            const user = getUserByRUT(rut);
-            return user && user.password === password;
-        }
-
-        // Toggle password visibility
-        function togglePasswordLogin() {
+        // Password Toggle
+        function togglePassword() {
             const passwordInput = document.getElementById('password');
             const eyeIcon = document.getElementById('eyeIcon');
             
@@ -60,7 +83,7 @@
             }
         }
 
-        // Handle login form submission
+        // Form Submission
         function handleLogin(event) {
             event.preventDefault();
             
@@ -79,7 +102,7 @@
             passwordError.classList.remove('show');
             
             // Validate RUT
-            if (!rutInput.value || !isValidRUTFormat(rutInput.value)) {
+            if (!rutInput.value || !validateRUT(rutInput.value)) {
                 rutInput.classList.add('error');
                 rutError.textContent = 'Por favor, ingresa un RUT válido';
                 rutError.classList.add('show');
@@ -97,17 +120,19 @@
                 // Show loading state
                 loginBtn.classList.add('loading');
                 loginBtn.textContent = 'Ingresando...';
-                loginBtn.disabled = true;
                 
                 // Simulate login process
                 setTimeout(() => {
+                    // Check credentials against stored users
                     if (validateLogin(rutInput.value, passwordInput.value)) {
+                        // Successful login
                         const user = getUserByRUT(rutInput.value);
                         localStorage.setItem('currentUser', JSON.stringify(user));
                         
                         alert(`¡Bienvenido/a ${user.fullName}!`);
                         window.location.href = '/';
                     } else {
+                        // Failed login
                         rutInput.classList.add('error');
                         passwordInput.classList.add('error');
                         rutError.textContent = 'RUT o contraseña incorrectos';
@@ -119,9 +144,13 @@
                     // Reset button state
                     loginBtn.classList.remove('loading');
                     loginBtn.textContent = 'Ingresar';
-                    loginBtn.disabled = false;
                 }, 2000);
             }
+        }
+
+        // Back Button
+        function goBack() {
+            window.location.href = '/';
         }
 
         // Add smooth focus transitions

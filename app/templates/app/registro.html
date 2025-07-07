@@ -11,9 +11,21 @@
 {% block content %}
 <body>
     <!-- Back Button -->
-    <button class="back-button" onclick="goBack()">
+    <button class="back-button" id="goBackBtn">
         <div class="back-arrow"></div>
     </button>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const backBtn = document.getElementById('goBackBtn');
+            if (backBtn) {
+                console.log("Botón detectado");
+                backBtn.addEventListener('click', function () {
+                    window.location.href = "/login";
+                });
+            }
+        });
+    </script>
 
     <!-- Register Card -->
     <div class="register-card">

@@ -181,7 +181,7 @@
 
         // Back Button
         function goBack() {
-            window.location.href = '';
+            window.location.href = '/login';
         }
 
         // Add smooth focus transitions

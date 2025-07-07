@@ -253,6 +253,9 @@
                 }, 2000);
             }
         }
+                function goBack() {
+            window.location.href = '/';
+        }
 
         // Add smooth focus transitions
         document.addEventListener('DOMContentLoaded', function() {
