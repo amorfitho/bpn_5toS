@@ -1,101 +1,42 @@
 // Check if user exists by RUT
-        function getUserByRUT(rut) {
-            const users = JSON.parse(localStorage.getItem('mascotaFelizUsers') || '[]');
-            return users.find(user => user.rut === rut);
+        // Clean RUT (remove dots and dash, uppercase K)
+        function cleanRUT(rut) {
+            return rut.replace(/[.\-\s]/g, '').toUpperCase();
         }
 
-        // Enhanced RUT Formatting and Validation (same as register and login)
-        function formatRUT(input) {
-            // Remove all non-alphanumeric characters except K
-            let value = input.value.replace(/[^0-9kK]/g, '');
+        // Simple RUT validation - just check basic format
+        function isValidRUTFormat(rut) {
+            const cleanRut = cleanRUT(rut);
+            return /^[0-9]{7,8}[0-9K]$/.test(cleanRut);
+        }
+
+        // Format RUT as user types (simple version)
+        function formatRUTLogin(input) {
+            let value = input.value.replace(/[^0-9kK]/g, '').toUpperCase();
             
-            if (value.length > 1) {
-                let rut = value.slice(0, -1);
-                let dv = value.slice(-1);
-                
-                // Add dots to RUT (only if more than 3 digits)
-                if (rut.length > 3) {
-                    rut = rut.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-                }
-                
-                input.value = rut + '-' + dv;
-            } else {
-                input.value = value;
+            // Limit to 9 characters max
+            if (value.length > 9) {
+                value = value.substring(0, 9);
             }
             
-            // Real-time validation
+            input.value = value;
+            
+            // Clear error states
             const rutInput = document.getElementById('rut');
             const rutError = document.getElementById('rutError');
-            const rutSuccess = document.getElementById('rutSuccess');
-            
-            if (input.value.length >= 9) { // Minimum: 1.234.567-8
-                if (validateRUT(input.value)) {
-                    // Check if RUT exists in registered users
-                    const user = getUserByRUT(input.value);
-                    if (user) {
-                        rutInput.classList.remove('error');
-                        rutInput.classList.add('success');
-                        rutError.classList.remove('show');
-                        rutSuccess.classList.add('show');
-                    } else {
-                        rutInput.classList.remove('success');
-                        rutInput.classList.add('error');
-                        rutSuccess.classList.remove('show');
-                        rutError.textContent = 'Este RUT no está registrado';
-                        rutError.classList.add('show');
-                    }
-                } else {
-                    rutInput.classList.remove('success');
-                    rutInput.classList.add('error');
-                    rutSuccess.classList.remove('show');
-                    rutError.textContent = 'RUT inválido. Verifica el dígito verificador';
-                    rutError.classList.add('show');
-                }
-            } else if (input.value.length > 0) {
-                // Show neutral state while typing
-                rutInput.classList.remove('error', 'success');
-                rutError.classList.remove('show');
-                rutSuccess.classList.remove('show');
-            } else {
-                // Empty field
-                rutInput.classList.remove('error', 'success');
-                rutError.classList.remove('show');
-                rutSuccess.classList.remove('show');
-            }
+            rutInput.classList.remove('error');
+            rutError.classList.remove('show');
         }
 
-        function validateRUT(rut) {
-            // Remove all formatting
-            const cleanRUT = rut.replace(/[.-\s]/g, '');
-            
-            // Check minimum length (7 digits + 1 verification digit)
-            if (cleanRUT.length < 8 || cleanRUT.length > 9) {
-                return false;
-            }
-            
-            // Separate RUT number from verification digit
-            const rutNumbers = cleanRUT.slice(0, -1);
-            const dv = cleanRUT.slice(-1).toLowerCase();
-            
-            // Validate that RUT numbers are actually numbers
-            if (!/^\d+$/.test(rutNumbers)) {
-                return false;
-            }
-            
-            // Calculate verification digit using Chilean algorithm
-            let sum = 0;
-            let multiplier = 2;
-            
-            // Calculate from right to left
-            for (let i = rutNumbers.length - 1; i >= 0; i--) {
-                sum += parseInt(rutNumbers[i]) * multiplier;
-                multiplier = multiplier === 7 ? 2 : multiplier + 1;
-            }
-            
-            const remainder = sum % 11;
-            const calculatedDV = remainder < 2 ? remainder.toString() : 'k';
-            
-            return dv === calculatedDV;
+        // Find user by RUT
+        function getUserByRUT(rut) {
+            const rutClean = cleanRUT(rut);
+            const users = JSON.parse(localStorage.getItem('mascotaFelizUsers') || '[]');
+            return users.find(user => {
+                // Compare clean RUTs
+                const userRutClean = cleanRUT(user.rut);
+                return userRutClean === rutClean;
+            });
         }
 
         // Form Submission
@@ -114,23 +55,13 @@
             rutError.classList.remove('show');
             
             // Validate RUT and check if user exists
-            if (!rutInput.value || !validateRUT(rutInput.value)) {
+            // Validate RUT
+            if (!rutInput.value || !isValidRUTFormat(rutInput.value)) {
                 rutInput.classList.add('error');
                 rutError.textContent = 'Por favor, ingresa un RUT válido';
                 rutError.classList.add('show');
-                rutSuccess.classList.remove('show');
                 isValid = false;
-            } else {
-                const user = getUserByRUT(rutInput.value);
-                if (!user) {
-                    rutInput.classList.add('error');
-                    rutError.textContent = 'Este RUT no está registrado. ¿Deseas crear una cuenta?';
-                    rutError.classList.add('show');
-                    rutSuccess.classList.remove('show');
-                    isValid = false;
-                }
             }
-            
             if (isValid) {
                 // Show loading state
                 recoveryBtn.classList.add('loading');
